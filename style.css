@@ -1,0 +1,2172 @@
+/* ===========================
+   VARIABLES & BASE STYLES
+   =========================== */
+@font-face {
+    font-family: 'HughIsLife';
+    src: url('assets/fonts/Hugh%20is%20Life%20Personal%20Use%20.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Geraldine';
+    src: url('assets/fonts/GERALDINE%20PERSONAL%20USE.ttf') format('truetype');
+}
+
+:root {
+    --bg-color: #faf9f6;
+    --text-main: #333333;
+    --text-muted: #777777;
+    --accent-color: #d8c3b5;
+    --accent-dark: #bba091;
+    --primary-color: #005b5c;
+    --white: #ffffff;
+
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-custom: 'HughIsLife', cursive;
+    --font-script: 'Geraldine', cursive;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    /* Prevent horizontal scroll */
+    width: 100%;
+}
+
+/* ===========================
+   PRELOADER
+   =========================== */
+.loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+    cursor: pointer;
+    /* Indicates the whole screen is clickable */
+}
+
+.loader-wrapper.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-logo {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.btn-open-invite {
+    margin-top: 30px;
+    padding: 12px 35px;
+    background-color: var(--primary-color);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    animation: btnPulse 2s infinite;
+}
+
+.btn-open-invite.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.btn-open-invite:hover {
+    background-color: white;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes btnPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 91, 92, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 91, 92, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 91, 92, 0);
+    }
+}
+
+.loader-line {
+    width: 100px;
+    height: 2px;
+    background-color: var(--primary-color);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.loader-line::after {
+    content: '';
+    position: absolute;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-dark);
+    animation: loaderLineMove 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+@keyframes loaderLineMove {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+#celebrationCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    /* Behind the modal-content */
+    display: none;
+}
+
+#celebrationCanvas.active {
+    display: block;
+}
+
+#celebrationModal.modal-overlay {
+    z-index: 2000;
+}
+
+#celebrationModal .modal-content {
+    position: relative;
+    z-index: 2;
+    /* Above the canvas */
+}
+
+body {
+    background-image: radial-gradient(var(--accent-color) 0.5px, transparent 0.5px), radial-gradient(var(--accent-color) 0.5px, var(--bg-color) 0.5px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    background-attachment: fixed;
+    font-family: var(--font-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+.footer {
+    /* padding: 3rem 2rem; */
+    background-color: var(--bg-color);
+    text-align: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.footer a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--accent-color);
+}
+
+.footer a:hover::after {
+    width: 100%;
+    background-color: var(--accent-color);
+}
+
+/* ===========================
+   ANIMATIONS
+   =========================== */
+@keyframes floatImage {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulseMusic {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(187, 160, 145, 0.4);
+    }
+
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(187, 160, 145, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(187, 160, 145, 0);
+    }
+}
+
+@keyframes timerPop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        color: var(--accent-dark);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes happyFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-5px) rotate(1deg);
+    }
+
+    66% {
+        transform: translateY(-2px) rotate(-1deg);
+    }
+}
+
+/* ===========================
+   TYPOGRAPHY
+   =========================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    color: var(--text-main);
+}
+
+.section-title {
+    font-size: 2.8rem;
+    text-align: center;
+    margin: 0 auto 2.5rem auto;
+    width: fit-content;
+    display: block;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.section-title:hover::after {
+    width: 100px;
+}
+
+.section-subtitle {
+    font-family: var(--font-custom);
+    font-size: 2.8rem;
+    /* Adjusted for this specific script font */
+    color: #9c8375;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    /* text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.9), 1px -1px 0 rgba(255, 255, 255, 0.9), -1px 1px 0 rgba(255, 255, 255, 0.9), 1px 1px 0 rgba(255, 255, 255, 0.9); */
+}
+
+/* ===========================
+   LAYOUT
+   =========================== */
+.section-content {
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===========================
+   NAVBAR
+   =========================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: .5rem 0px !important;
+    z-index: 1000;
+    background-color: rgba(250, 249, 246, 0.95);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0px 10px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+.nav-logo:hover {
+    color: var(--accent-dark);
+}
+
+.nav-item {
+    font-weight: 900;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.nav-controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.music-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--white);
+    border: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    color: var(--primary-color);
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.music-toggle:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.music-toggle.playing {
+    background-color: var(--primary-color);
+    color: var(--white);
+    animation: pulseMusic 2s infinite;
+    border-color: var(--primary-color);
+}
+
+/* Floating Music Notes */
+.music-note {
+    position: absolute;
+    color: var(--primary-color);
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatNote 2s linear forwards;
+    opacity: 0;
+}
+
+@keyframes floatNote {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--x-offset), -100px) rotate(var(--rotation));
+        opacity: 0;
+    }
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.celebration-style {
+    border: 2px solid var(--accent-color);
+    background: linear-gradient(to bottom, #ffffff, #faf9f6);
+    animation: popperPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popperPop {
+    0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.celebration-divider {
+    font-size: 2.5rem;
+    color: var(--accent-dark);
+    margin: .5rem 0;
+    opacity: 0.6;
+}
+
+.timer-ended-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background: rgba(0, 91, 92, 0.45);
+    /* Deep teal glass */
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: pulseCelebration 3s ease-in-out infinite;
+    position: relative;
+    z-index: 10;
+    /* Above fireworks */
+}
+
+@keyframes pulseCelebration {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+}
+
+/* ===========================
+   FAMILIES SECTION
+   =========================== */
+
+/* ===========================
+   HERO SECTION
+   =========================== */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 8rem 5% 5rem 5%;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.hero-bg-image {
+    position: absolute;
+    top: -100px;
+    left: 370px;
+    right: 0;
+    bottom: 0;
+    background: url('assets/full_caricature.jpg') no-repeat right top;
+    background-size: cover;
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%);
+    mask-image: linear-gradient(to right, transparent 0%, black 20%);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgb(250 249 246 / 0%) 0%, rgb(250 249 246 / 43%) 60%);
+    z-index: 1;
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    max-width: 780rem;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hero-image-container {
+    display: none;
+    /* Hidden because it is now the background */
+}
+
+.hero-image-container {
+    width: 350px;
+    height: 450px;
+    margin: 0 auto 2.5rem;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    animation: floatImage 6s ease-in-out infinite;
+    border: 5px solid var(--white);
+}
+
+.hero-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-names {
+    font-size: 4.4rem;
+    font-family: 'Great Vibes', cursive;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+}
+
+/* THE BEST DESIGN (FIXED): Premium Save the Date Heart Banner */
+.hero-date-banner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: .5rem auto 0;
+    padding: 0 1.5rem;
+    z-index: 100;
+}
+
+/* Elegant horizontal bar with dynamic width */
+.hero-date-banner::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 38px;
+    background: rgba(0, 91, 92, 0.9);
+    /* Deep Teal */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    z-index: -1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.date-wing {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    padding: 0 1.8rem;
+    white-space: nowrap;
+}
+
+/* Perfect Center Heart with SEAMLESS BORDER */
+.date-heart {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 -15px;
+    /* Create the white outline around the whole composite heart */
+    filter:
+        drop-shadow(2px 0 0 white) drop-shadow(-2px 0 0 white) drop-shadow(0 2px 0 white) drop-shadow(0 -2px 0 white) drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
+    animation: organicPulse 2s ease-in-out infinite;
+}
+
+.heart-shape {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #ff4757;
+    transform: rotate(-45deg);
+    z-index: 1;
+}
+
+.heart-shape::before,
+.heart-shape::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    background: #ff4757;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.heart-shape::before {
+    top: -20px;
+    left: 0;
+}
+
+.heart-shape::after {
+    left: 20px;
+    top: 0;
+}
+
+.date-heart-text {
+    position: relative;
+    z-index: 20;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+    margin-top: -20px;
+    /* Pulled up to center in the heart's bulk */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+@keyframes organicPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* ===========================
+   FORMAL INVITATION CARD
+   =========================== */
+/* Venue & Details Section */
+.venue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto 5rem;
+}
+
+.venue-card {
+    background: #ffffff;
+    padding: 3.5rem 2rem 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.venue-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0, 91, 92, 0.1);
+}
+
+.venue-icon-wrapper {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 70px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 25px rgba(0, 91, 92, 0.2);
+}
+
+.venue-tag {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    background: rgba(0, 91, 92, 0.05);
+    color: var(--accent-color);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 1.5rem;
+}
+
+.venue-title {
+    font-family: var(--font-script);
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.venue-info p {
+    margin-bottom: 1rem;
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+.venue-info i {
+    color: var(--accent-color);
+    margin-right: 8px;
+    width: 20px;
+}
+
+.btn-venue {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 1rem 2.5rem;
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-venue:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.map-wrapper {
+    width: 100% !important;
+    max-width: 1200px;
+    margin: 3rem auto 0;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+    border: 10px solid white;
+    background: white;
+    transition: transform 0.4s ease;
+}
+
+.map-wrapper:hover {
+    transform: scale(1.01);
+}
+
+.map-wrapper iframe {
+    width: 100% !important;
+    display: block;
+    filter: grayscale(0.2) contrast(1.1);
+    transition: filter 0.5s ease;
+}
+
+.map-wrapper:hover iframe {
+    filter: grayscale(0) contrast(1);
+}
+
+/* ===========================
+   FOLIO INVITATION (TWO-PAGE)
+   =========================== */
+.invitation-section {
+    padding: 8rem 2rem;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    left: 60px;
+    min-height: 100vh;
+    /* Ensure enough height for the massive caricature */
+}
+
+.peeking-caricature {
+    position: absolute;
+    left: -300px;
+    top: 300px;
+    width: 65rem;
+    z-index: 99;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.peeking-caricature img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Single Peek Mobile/Tablet Styles - Hidden on PC */
+.single-peek {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    pointer-events: none;
+    animation: peekFloat 3s ease-in-out infinite;
+}
+
+.bride-peek {
+    animation-delay: 0s;
+}
+
+.groom-peek {
+    animation-delay: -1.5s;
+    /* Staggered start */
+}
+
+@keyframes peekFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(5px, -5px) scale(1.02);
+    }
+}
+
+.single-peek img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+}
+
+.folio-wrapper {
+    display: flex;
+    max-width: 1100px;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    perspective: 2000px;
+    z-index: 2;
+    margin: 0 auto;
+    /* Centered */
+}
+
+
+
+
+.folio-page {
+    flex: 1;
+    padding: 5rem 4rem;
+    background: linear-gradient(135deg, #fff 0%, #fdfdfd 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Subtle Paper Texture */
+.folio-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../www.transparenttextures.com/patterns/cream-paper.png');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.left-page {
+    border-right: none;
+}
+
+.right-page {
+    border-left: none;
+}
+
+.folio-spine {
+    width: 2px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.1));
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.folio-spine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    background: linear-gradient(to right,
+            transparent,
+            rgba(0, 0, 0, 0.02) 20%,
+            rgba(0, 0, 0, 0.05) 50%,
+            rgba(0, 0, 0, 0.02) 80%,
+            transparent);
+}
+
+.folio-content {
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgba(0, 91, 92, 0.1);
+    /* Subtle Teal Border */
+    height: 100%;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.invite-header {
+    font-size: 0.9rem;
+    /* Smaller as per image */
+    color: var(--primary-color);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    /* Reduced to push parents up */
+}
+
+.invite-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    /* Slightly larger parents names */
+    color: var(--accent-dark);
+    line-height: 1.1;
+    margin: 0.5rem 0 0.2rem 0;
+    /* Reduced bottom margin */
+}
+
+.folio-address {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.side-group {
+    margin-bottom: 1rem;
+}
+
+.parents-block {
+    margin: 1.5rem 0;
+}
+
+
+.small-ornament {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.small-ornament::before,
+.small-ornament::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 1px;
+    background: var(--accent-color);
+}
+
+.small-ornament::before {
+    left: 20%;
+}
+
+.small-ornament::after {
+    right: 20%;
+}
+
+.couple-names {
+    font-size: 2.5rem;
+    margin: 2rem 0;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 0px rgba(0, 91, 92, 0.05);
+}
+
+.request-line {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-main);
+    font-style: italic;
+}
+
+.journey-line {
+    font-size: 1rem;
+    margin-top: 2rem;
+    color: var(--text-muted);
+}
+
+.folio-ornament {
+    position: absolute;
+    font-size: 2rem;
+    color: var(--primary-color);
+    opacity: 0.15;
+}
+
+.bottom-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+.top-right {
+    top: 20px;
+    right: 20px;
+}
+
+/* Responsive Folio */
+/* Redundant mobile styles removed for consolidation */
+
+
+
+/* ===========================
+   FAMILY DETAILS (UNIFIED CARD)
+   =========================== */
+.family-section {
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.family-unified-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 5rem 4rem;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.family-unified-card::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid var(--primary-color);
+    opacity: 0.2;
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+.family-column {
+    padding: 0 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.family-column:first-child {
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.family-column h3 {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+    color: var(--text-main);
+    letter-spacing: 1px;
+}
+
+.family-intro {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.caricature-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    background: var(--bg-color);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.caricature-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.family-member {
+    margin-bottom: 2rem;
+}
+
+.member-title {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.member-name {
+    font-size: 1.6rem;
+    color: var(--text-main);
+    font-weight: 400;
+}
+
+.family-address {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.address-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+}
+
+.address-text {
+    font-size: 1.15rem;
+    color: var(--text-main);
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* ===========================
+   COUNTDOWN
+   =========================== */
+.countdown-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../images.pexels.com/photos/2395240/pexels-photo-2395240.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+#fireworksCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: nowrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    /* Stay above fireworks */
+}
+
+.countdown-item {
+    background: rgba(255, 255, 255, 0.75);
+    padding: 2rem;
+    border-radius: 15px;
+    min-width: 120px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: happyFloat 6s ease-in-out infinite;
+}
+
+.countdown-item::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 100%);
+    transform: rotate(45deg);
+    animation: shimmer 4s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+.countdown-item:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.countdown-item:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+.countdown-item:nth-child(3) {
+    animation-delay: 3s;
+}
+
+.countdown-item:nth-child(4) {
+    animation-delay: 4.5s;
+}
+
+.countdown-number {
+    display: block;
+    font-size: 3.8rem;
+    /* Slightly larger */
+    font-weight: 400;
+    /* Serif looks best at 400 weight */
+    font-family: var(--font-heading);
+    /* Playfair Display */
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 1), 2px 2px 5px rgba(0, 0, 0, 0.05);
+    /* Soft depth */
+}
+
+.countdown-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.countdown-item.changed .countdown-number {
+    animation: timerPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ===========================
+   WHEN AND WHERE & MAPS
+   =========================== */
+.event-details.venue-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.venue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.event-card {
+    background-color: var(--white);
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.event-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+    transform: translateY(-10px);
+}
+
+.event-icon {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-icon {
+    transform: scale(1.2);
+}
+
+.event-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+}
+
+.event-card p {
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+}
+
+.map-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ===========================
+   RSVP SECTION
+   =========================== */
+/* Studio Split RSVP Design - Compact Version */
+.rsvp-centered-wrapper {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(253, 253, 253, 0.5) 100%), url('../../www.transparenttextures.com/patterns/cream-paper.png');
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    border: 1px solid rgba(0, 91, 92, 0.05);
+}
+
+
+.rsvp-form-side {
+    width: 100%;
+    padding: 4rem 3rem;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.rsvp-form-header {
+    margin-bottom: 1.5rem;
+    /* Reduced from 2.5rem */
+}
+
+.form-tag {
+    color: var(--accent-color);
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.form-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    /* Reduced from 2.5rem */
+    color: var(--text-main);
+    margin-bottom: 0.8rem;
+}
+
+.form-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.6rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem 0;
+    border: none;
+    border-bottom: 2px solid #f0f0f0;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    background: transparent;
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-bottom-color: var(--accent-color);
+}
+
+.btn-studio-submit {
+    width: 100%;
+    padding: 1.2rem;
+    margin-top: 2rem;
+    background: var(--text-main);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-studio-submit:hover {
+    background: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 91, 92, 0.2);
+}
+
+.rsvp-section {
+    background-color: var(--white);
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.rsvp-form {
+    max-width: 700px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+    color: var(--text-muted);
+}
+
+.form-group input,
+.form-group select {
+    padding: 1.2rem;
+    border: 1px solid #e0e0e0;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 4px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--accent-dark);
+    box-shadow: 0 0 0 3px rgba(187, 160, 145, 0.2);
+}
+
+.btn-submit {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 1.2rem 2.5rem;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 1rem;
+    border-radius: 4px;
+}
+
+.btn-submit:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+.footer {
+    /* padding: 5rem 2rem; */
+    text-align: center;
+    background-color: var(--bg-color);
+}
+
+.footer-logo {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.footer-logo:hover {
+    color: var(--accent-dark);
+}
+
+.footer p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+/* ===========================
+   MOBILE RESPONSIVE DESIGN
+   =========================== */
+/* Tablet and Phone Desktop Mode */
+/* Tablet styles consolidated below */
+
+
+
+
+/* Mobile styles consolidated below */
+
+
+/* Small mobile styles consolidated below */
+
+
+/* ===========================
+   MODAL POPUP
+   =========================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(250, 249, 246, 0.98);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--white);
+    padding: 2rem 3rem;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 1px solid var(--accent-dark);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.modal-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    color: var(--accent-dark);
+}
+
+.modal-title {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.modal-message {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.modal-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    color: var(--accent-dark);
+}
+
+/* ===========================
+   FLOATING MUSIC TOGGLE & NOTES
+   =========================== */
+.music-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 91, 92, 0.3);
+    overflow: visible;
+    /* Required for music notes to fly out */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+}
+
+.music-toggle.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.music-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(0, 91, 92, 0.4);
+}
+
+.music-toggle.playing {
+    animation: pulseMusic 2s infinite;
+}
+
+.music-note {
+    position: absolute;
+    color: var(--primary-color);
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: -1;
+    animation: noteFloatUp 2s ease-out forwards;
+}
+
+@keyframes noteFloatUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5) rotate(0deg);
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.2) rotate(45deg);
+    }
+}
+
+@keyframes pulseMusic {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 91, 92, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 91, 92, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 91, 92, 0);
+    }
+}
+
+/* Music toggle mobile styles consolidated below */
+
+/* ==========================================================================
+   CONSOLIDATED RESPONSIVE DESIGN (PC, Tablet, Mobile)
+   ========================================================================== */
+
+/* 1. TABLET & DESKTOP MODE (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-names {
+        font-size: 4rem;
+    }
+
+    .section-title {
+        font-size: 2.4rem;
+    }
+
+    .hero {
+        padding: 10rem 7% 3rem 14%;
+        min-height: 75vh;
+    }
+
+    .hero-bg-image {
+        left: 0px !important;
+        width: calc(100% + 210px);
+        height: calc(100% + 200px);
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        background-position: right top;
+    }
+
+    .invitation-section {
+        padding: 8rem 2rem;
+        min-height: 65vh;
+        left: 30px;
+        /* Reduced for tablet balance */
+        overflow: hidden;
+        position: relative;
+    }
+
+    .folio-wrapper {
+        flex-direction: row;
+        max-width: 950px;
+        margin: 0 auto;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .folio-page {
+        padding: 3rem 2rem;
+        flex: 1;
+    }
+
+    .folio-spine {
+        display: block;
+    }
+
+    .invite-names {
+        font-size: 2.2rem;
+    }
+
+    .couple-names {
+        font-size: 3.5rem;
+    }
+
+    .peeking-caricature {
+        display: none;
+    }
+
+    .single-peek {
+        display: block;
+        width: 150px;
+    }
+
+    .bride-peek {
+        top: 30px;
+        left: 30px;
+    }
+
+    .groom-peek {
+        bottom: -5px;
+        right: 5px;
+    }
+}
+
+/* 2. MOBILE (max-width: 768px) */
+@media (max-width: 768px) {
+
+    /* Navbar */
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--bg-color);
+        flex-direction: column;
+        gap: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: clip-path 0.4s ease-in-out;
+    }
+
+    .nav-links.active {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .nav-links a {
+        padding: 1rem;
+        display: block;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hero */
+    .hero {
+        padding: 4rem 1.5rem 5rem 1.5rem;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: center;
+    }
+
+    .hero-bg-image {
+        -webkit-mask-image: none;
+        mask-image: none;
+        top: -20px;
+        left: -100px;
+        width: calc(100% + 202px);
+        height: calc(100% + 15px);
+        background: url('assets/full_caricature.jpg') no-repeat right top;
+        background-size: cover;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        padding: 2rem 1.5rem;
+        backdrop-filter: blur(15px);
+    }
+
+    .hero-names {
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+
+    #spsize {
+        font-size: 2.4rem;
+        text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.9), 1px -1px 0 rgba(255, 255, 255, 0.9), -1px 1px 0 rgba(255, 255, 255, 0.9), 1px 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .section-subtitle {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        text-shadow: -1px -1px 0 rgb(247 0 0 / 90%), 1px -1px 0 rgb(250 253 253), -1px 1px 0 rgba(255, 255, 255, 0.9), 1px 1px 0 rgb(236 232 232 / 90%);
+        /* text-shadow: -1px -1px 0 rgba(255, 255, 255, 0.9), 1px -1px 0 rgba(255, 255, 255, 0.9), -1px 1px 0 rgba(255, 255, 255, 0.9), 1px 1px 0 rgba(255, 255, 255, 0.9); */
+    }
+
+    /* Invitation */
+    .invitation-section {
+        padding: 1rem 1rem 4rem;
+        left: 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .peeking-caricature {
+        display: none;
+    }
+
+    .single-peek {
+        display: block;
+        width: 120px;
+        z-index: 50;
+    }
+
+    .bride-peek {
+        top: -10px;
+        left: 16px;
+    }
+
+    .groom-peek {
+        bottom: 0px;
+        right: 0px;
+    }
+
+    .folio-wrapper {
+        flex-direction: column;
+        margin: 0 5px;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .folio-page {
+        padding: 2rem 1.2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .folio-spine {
+        display: none;
+    }
+
+    .couple-names {
+        font-size: 2.8rem;
+    }
+
+    .invite-names {
+        font-size: 1.8rem;
+    }
+
+    /* Family Section Responsive Fix */
+    .family-unified-card {
+        grid-template-columns: 1fr !important;
+        padding: 3rem 1.5rem !important;
+    }
+
+    .family-column {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        padding: 0 0 2rem 0 !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Venue & Map */
+    .venue-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .map-wrapper {
+        margin: 1rem;
+        border: 4px solid white;
+    }
+
+    .map-wrapper iframe {
+        height: 300px;
+    }
+
+    /* RSVP */
+    .rsvp-split-wrapper {
+        flex-direction: column;
+    }
+
+    .rsvp-image-side {
+        height: 250px;
+    }
+
+    .rsvp-form-side {
+        padding: 2rem 1.5rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Timer */
+    .countdown-timer {
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
+
+    .countdown-item {
+        min-width: 65px;
+        padding: 1rem 0.2rem;
+    }
+
+    .countdown-number {
+        font-size: 1.6rem;
+    }
+
+    /* Utilities */
+    .music-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* 3. SMALL MOBILE (max-width: 480px) */
+@media (max-width: 480px) {
+    .hero-names {
+        font-size: 1.8rem;
+    }
+
+    .hero-date-banner {
+        transform: scale(0.7);
+        margin-top: 0;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .countdown-number {
+        font-size: 1.4rem;
+    }
+
+    .folio-page {
+        padding: 2rem 1rem;
+    }
+}
